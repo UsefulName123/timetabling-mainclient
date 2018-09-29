@@ -4,6 +4,11 @@
 using namespace std;
 struct classinfo
 {
+    int teacher,sbjcode,ttime;
+    int floc,dloc;
+};
+struct studentclass
+{
     vector<int> student;
     int teacher,sbjcode,ttime;
     int floc,dloc;//floor location, location details
@@ -11,7 +16,7 @@ struct classinfo
 struct group
 {
     int maxtime;
-    vector<classinfo> subject;
+    vector<studentclass> subject;
 };
 struct submit
 {
