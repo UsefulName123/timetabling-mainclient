@@ -25,5 +25,6 @@ int main()
 {
     int i,j;
     //scan submit
+    //scan classinfo_teacher, sbjcpde,ttime,floc,dloc
     return 0;
 }
