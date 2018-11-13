@@ -1,85 +1,113 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
 #include<algorithm>
-#include<vector>
-#include<string.h>
 using namespace std;
+FILE*fin=fopen("input.txt", "r");
+FILE*fout=fopen("output.txt", "w");
 struct classinfo
 {
-    int snum;
-    int teacher,sbjcode,ttime;
-    int floc,dloc;
-};
-struct studentclass
-{
-    vector<int> student;
-    int teacher,sbjcode,ttime;
-    int floc,dloc;//floor location, location details
+    int stn;
+    int ccode,student[100];
+    int lx,ly,lz;
+    int cmax;
 };
 struct group
 {
-    int maxtime;
-    vector<studentclass> subject;
+    struct classinfo gclass[100];
+    int schk[100];
+    int gcn;
+    int gmax;
 };
-struct submit
-{
-    vector<int> sbjcode;
-};
-submit s2[100];
-submit s3[100];
-classinfo c2[100];
-classinfo c3[100];
-vector<group> g2;
-vector<group> g3;
-int sn2,sn3,stn2,stn3;//subjectnumber
-bool cdevide(classinfo x,classinfo y)
-{
-    if(x.snum/20>y.snum/20) return true;
-    else if(x.snum/20<y.snum/20) return false;
-    else if(x.ttime>y.ttime) return true;
-    else if(x.snum>y.snum) return true;
-    else return false;
-}
-void devide4(int grade)
-{
-    int i,j,n,s=-1,f;
-    group t1,t2,t3,t4;
-    if(grade==2)
-    {
-        for(i=0;i<sn2;i++)
-        {
-            if((c2[i].snum+19)/4==cnumber&&s==-1) s=i;
-            if((c2[i].snum+19)/4<cnumber)
-            {
-                f=i;
-                break;
-            }
-        }
-        for(i=s;i<f;i+=4)
-        {
-            memset(&t1,0,sizeof(struct group));
-            memset(&t2,0,sizeof(struct group));
-            memset(&t3,0,sizeof(struct group));
-            memset(&t4,0,sizeof(struct group));
-            for(i=1;i<=stn2;i++)
-            n=g2.size();
-        }
-    }
-}
+int gn;
+int subn;
+classinfo sub[100];
+group a[100];
 int main()
 {
-    int i,j;
-    //scan submit
-    //scan classinfo_teacher, sbjcpde,ttime,floc,dloc
-    //scan stn2_2gradestudent,stn3_3gradestudent,sn2_2gradesubject,sn3_3gradesubject
-    sort(c2,c2+sn,cdevide);
-    sort(c3,c3+sn,cdevide);
-    devide4(2);
-    devide3(2);
-    devide2(2);
-    devide1(2);
-    devide4(3);
-    devide3(3);
-    devide2(3);
-    devide1(3);
-    return 0;
+    int i,n,j,t,x,y,z,k;
+    fscanf(fin,"%d",&subn);
+    for(i=0;i<=99;i++)
+    {
+        a[i].gcn=0;
+        a[i].gmax=0;
+    }
+    for(i=1;i<=subn;i++)
+    {
+        fscanf(fin,"%d",&t);//classcode
+        fscanf(fin,"%d",&n);//studentnumber
+        fscanf(fin,"%d %d %d",&x,&y,&z);
+        fscanf(fin,"%d",&sub[i].cmax);
+        sub[i].ccode=t;
+        sub[i].stn=n;
+        for(j=1;j<=n;j++)
+        {
+            fscanf(fin,"%d",&sub[i].student[j]);
+        }
+    }
+    for(i=1;i<=subn;i++)
+    {
+        printf("%d\n",sub[i].cmax);
+        if(sub[i].stn<=20)
+        {
+            for(j=1;j<=90;j++)
+            {
+                if(a[j].gcn==0)
+                {
+                    a[j].gcn++;
+                    a[j].gclass[a[j].gcn]=sub[i];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            a[i/4*4+4].gclass[++(a[i/4*4+4].gcn)]=sub[i];
+            a[i/4*4+4].gcn++;
+            if(a[i/4*4+4].gmax<sub[i].cmax)
+            {
+                a[i/4*4+4].gmax=sub[i].cmax;
+            }
+            a[i/4*4+1].gclass[++(a[i/4*4+1].gcn)]=sub[i];
+            a[i/4*4+1].gcn++;
+            if(a[i/4*4+1].gmax<sub[i].cmax)
+            {
+                a[i/4*4+1].gmax=sub[i].cmax;
+            }
+            a[i/4*4+2].gclass[++(a[i/4*4+2].gcn)]=sub[i];
+            a[i/4*4+2].gcn++;
+            if(a[i/4*4+2].gmax<sub[i].cmax)
+            {
+                a[i/4*4+2].gmax=sub[i].cmax;
+            }
+            a[i/4*4+3].gclass[++(a[i/4*4+3].gcn)]=sub[i];
+            a[i/4*4+3].gcn++;
+            if(a[i/4*4+3].gmax<sub[i].cmax)
+            {
+                a[i/4*4+3].gmax=sub[i].cmax;
+            }
+        }
+    }
+    i=1;
+    while(a[i].gcn!=0)
+    {
+        fprintf(fout,"%d %d\n",i, a[i].gcn);
+        for(j=1;j<=a[i].gcn;j++)
+        {
+            fprintf(fout,"%d %d %d %d %d\n",a[i].gclass[j].lz,a[i].gclass[j].lx,a[i].gclass[j].ly,a[i].gclass[j].cmax);
+            if(a[i].gcn!=1)
+            {
+                for(k=1;k<=a[i].gclass[j].stn;k++)
+                {
+                    if(a[i].gclass[j].student[k]>((a[i].gcn-1))*20&&a[i].gclass[j].student[k]<=((a[i].gcn))*20)
+                    {
+                        fprintf(fout,"%d ",k);
+                    }
+                }
+                fprintf(fout,"\n");
+            }
+        }
+        i++;
+    }
+    fprintf(fout,"%d ",i);
 }
